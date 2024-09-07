@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import { dbConnection } from './Database/dbConnection';
 
 dotenv.config();
 
@@ -28,4 +29,5 @@ app.get('/', (req, res) => {
 //server
 app.listen(PORT, () => {
   console.log(`Server running at:${PORT}`);
+  dbConnection();
 });
