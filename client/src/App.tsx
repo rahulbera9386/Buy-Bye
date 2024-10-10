@@ -13,71 +13,105 @@ import ShoppingHome from "./pages/shopping-view/home"
 import ShoppingListing from "./pages/shopping-view/listing"
 import ShoppingCheckout from "./pages/shopping-view/checkout"
 import ShoppingAccount from "./pages/shopping-view/account"
+import NotFound from "./pages/not-found"
+import UnAuth from "./pages/unauth-page"
+import CheckAuth from "./components/Shared/common/check-auth"
 
+
+const isAuthenticated = true;
+const user = { id: '1', role: 'admin' };
 const router = createBrowserRouter([
- 
+  {
+    path: "/",
+    element: <CheckAuth isAuthenticated={isAuthenticated} user={user} />,
+  },
   {
     path: "/auth",
-    element: <AuthLayout />,
-    children: [{
-      path: "login",
-      element: <AuthLogin />
-    },
-    {
-      path: "register",
-      element: <AuthRegister />
-    }]
-  },
-   {
-    path: "/admin",
-    element: <AdminLayout />,
-    children: [{
-      path: "dashboard",
-      element: <AdminDashboard />
-    },
-    {
-      path: "products",
-      element: <AdminProducts />
-    },
-    {
-      path: "orders",
-      element: <AdminOrders />
-    },
-    {
-      path: "features",
-      element: <AdminFeatures />
-    }]
+    element: (
+      <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+        <AuthLayout />
+      </CheckAuth>
+    ),
+    children: [
+      {
+        path: "login",
+        element: <AuthLogin />
+      },
+      {
+        path: "register",
+        element: <AuthRegister />
+      }
+    ]
   },
   {
-    path:"/shop",
-    element:<ShoppingLayout/>,
-    children:[{
-      path:"home",
-      element:<ShoppingHome/>
-    },
-    {
-      path:"listing",
-      element:<ShoppingListing/> 
-    },
-    {
-      path:"checkout",
-      element:<ShoppingCheckout/>
-    },
-    {
-      path:"account",
-      element:<ShoppingAccount/>
-    }
-  
-  ]
+    path: "/admin",
+    element: (
+      <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+        <AdminLayout />
+      </CheckAuth>
+    ),
+    children: [
+      {
+        path: "dashboard",
+        element: <AdminDashboard />
+      },
+      {
+        path: "products",
+        element: <AdminProducts />
+      },
+      {
+        path: "orders",
+        element: <AdminOrders />
+      },
+      {
+        path: "features",
+        element: <AdminFeatures />
+      }
+    ]
+  },
+  {
+    path: "/shop",
+    element: (
+      <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+        <ShoppingLayout />
+      </CheckAuth>
+    ),
+    children: [
+      {
+        path: "home",
+        element: <ShoppingHome />
+      },
+      {
+        path: "listing",
+        element: <ShoppingListing />
+      },
+      {
+        path: "checkout",
+        element: <ShoppingCheckout />
+      },
+      {
+        path: "account",
+        element: <ShoppingAccount />
+      }
+    ]
+  },
+  {
+    path: "/unauth-page",
+    element: <UnAuth />
   }
-])
+  ,
+  {
+    path: "*",
+    element: <NotFound />
+  }
+]);
 
 const App = () => {
   return (
     <>
-    
-    <RouterProvider router={router} />
-    
+
+      <RouterProvider router={router} />
+
     </>
   )
 }
