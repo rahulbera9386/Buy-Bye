@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import { dbConnection } from './Database/dbConnection';
+import authRouter from "./routes/auth/auth-routes.ts"
+
+
+
 
 dotenv.config();
 
@@ -20,11 +24,14 @@ const corsOption={
 app.use(express.json());
 app.use(cors(corsOption));
 app.use(cookieParser());
+app.use("/api/auth",authRouter)
 
 // Test route
 app.get('/', (req, res) => {
   res.send('Hello, MERN with TypeScript!');
 });
+
+
 
 //server
 app.listen(PORT, () => {
