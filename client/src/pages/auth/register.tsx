@@ -1,8 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
+import { registerUserApi } from "@/config";
 import { Label } from "@radix-ui/react-label"
+import axios from "axios";
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { toast } from "sonner";
+
 
 interface FormData{
   userName:string;
@@ -16,13 +20,39 @@ const AuthRegister = () => {
     password:""
   });
 
+  const navigate = useNavigate();
+
   const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
    
     setFormData({...formData,[e.target.name]:e.target.value})
   }
-  const handleSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
+  const handleSubmit=async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
-    console.log(formData);
+   // console.log(formData);
+   
+   try{
+const response=await axios.post(registerUserApi,formData,{
+  headers:{
+    "content-type":"application/json"
+  },
+  withCredentials:true
+});
+//console.log(response);
+if(response.data.success)
+{
+  toast.success(response.data.message);
+  navigate("/auth/login");
+}
+   }
+   catch(err)
+   {
+    console.log(err);
+    if (axios.isAxiosError(err) && err.response) {
+      toast.error(err.response.data.message);
+    } else {
+      toast.error('An unexpected error occurred while trying to register');
+    }
+   }
   }
     return (
       <div className="flex items-center justify-center ">

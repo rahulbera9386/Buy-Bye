@@ -1,28 +1,81 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
+import { loginUserApi } from "@/config";
+import { setUser } from "@/redux/auth-slice";
 import { Label } from "@radix-ui/react-label"
+
+
+import axios from "axios";
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom"
+import { toast } from "sonner";
 
 interface FormData{
  
   email:string;
   password:string;
 }
+
 const AuthLogin = () => {
   const [formData,setFormData]=useState<FormData>({
   
     email:"",
     password:""
   });
+  interface User {
+    userName: string;
+    email: string;
+    role: string; 
+  }
+  interface RootState {
+    auth: {
+      user:User
+    };
+  }
+  const navigate=useNavigate();
+  const dispatch=useDispatch();
+  const { user } = useSelector((store:RootState) => store.auth);
+ // console.log("rdk",user)
 
   const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
    
     setFormData({...formData,[e.target.name]:e.target.value})
   }
-  const handleSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
+  const handleSubmit=async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
-    console.log(formData);
+    //console.log(formData);
+    try{
+      const response=await axios.post(loginUserApi,formData,{
+        headers:{
+          "content-type":"application/json"
+        },
+        withCredentials:true
+      });
+      //console.log(response);
+      if(response.data.success)
+      {
+        toast.success(response.data.message);
+        dispatch(setUser(response.data.user));
+        if(user.role === "user")
+        {
+          navigate("/shop/home")
+        }
+        else{
+          navigate("/admin/dashboard")
+        }
+      }
+    }
+         catch(err)
+         {
+          console.log(err);
+          if (axios.isAxiosError(err) && err.response) {
+            toast.error(err.response.data.message);
+          } else {
+            toast.error('An unexpected error occurred while trying to register');
+          }
+         }
+    
   }
     return (
       <div className="flex items-center justify-center ">
