@@ -18,8 +18,8 @@ import UnAuth from "./pages/unauth-page"
 import CheckAuth from "./components/Shared/common/check-auth"
 
 
-const isAuthenticated = true;
-const user = { id: '1', role: 'admin' };
+const isAuthenticated = false;
+const user = { id: '1', role: 'user' };
 const router = createBrowserRouter([
   {
     path: "/",
