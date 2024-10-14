@@ -71,8 +71,6 @@ const AuthLogin = () => {
           console.log(err);
           if (axios.isAxiosError(err) && err.response) {
             toast.error(err.response.data.message);
-          } else {
-            toast.error('An unexpected error occurred while trying to register');
           }
          }
     

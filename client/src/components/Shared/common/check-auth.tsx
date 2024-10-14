@@ -43,7 +43,7 @@ navigate("/auth/login")
             navigate("/shop/home")
         }
     }
-    if (isAuthenticated && (location.pathname.includes("/admin"))) {
+    if (isAuthenticated && user?.role !== "admin" && (location.pathname.includes("/admin"))) {
         navigate("/unauth-page")
     }
     if (isAuthenticated &&
